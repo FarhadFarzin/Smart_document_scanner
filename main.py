@@ -10,11 +10,12 @@ canny = cv2.Canny(blur,50,150)
 
 contours , _ = cv2.findContours(canny,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
-for c in contours:
+for contour in contours:
     
-    x,y,w,h = cv2.boundingRect(c)
-    cv2.rectangle(img, (x,y),(w+x , y+h),(0,255,0),2)
-
-cv2.imshow('Orginal', img)
+    epsilon = 0.02 * cv2.arcLength(contour, True)
+    approx = cv2.approxPolyDP(contour, epsilon, True)
+    cv2.drawContours(img, [approx], -1 , (0,255,0),3)
+    
+cv2.imshow('Final', img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
