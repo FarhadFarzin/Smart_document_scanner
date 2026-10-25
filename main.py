@@ -18,13 +18,16 @@ for contour in contours:
     
 if len(approx) == 4:
     
-    width = 400
-    height = 450
+    width = 600
+    height = 600
     src = approx.reshape(4,2).astype('float32')
-    dst = np.float32([[0,0] , [width - 1 , 0] , [width - 1 , height - 1],[0 , height - 1] ])
+    dst = np.float32([[0, 0],[width - 1, 0],[width - 1, height - 1],[0, height - 1]])
+    matrix = cv2.getPerspectiveTransform(src, dst)
+    result = cv2.warpPerspective(img, matrix, (width,height))
     
     
     
-cv2.imshow('Final', img)
+cv2.imshow('Final', result)
+cv2.imshow('Final2',img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
