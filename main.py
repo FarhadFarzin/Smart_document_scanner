@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 img = cv2.imread('D:/Python_Projects/Smart_document_scanner/images/02_rotated_15deg.jpg')
 
@@ -14,7 +15,15 @@ for contour in contours:
     
     epsilon = 0.02 * cv2.arcLength(contour, True)
     approx = cv2.approxPolyDP(contour, epsilon, True)
-    cv2.drawContours(img, [approx], -1 , (0,255,0),3)
+    
+if len(approx) == 4:
+    
+    width = 400
+    height = 450
+    src = approx.reshape(4,2).astype('float32')
+    dst = np.float32([[0,0] , [width - 1 , 0] , [width - 1 , height - 1],[0 , height - 1] ])
+    
+    
     
 cv2.imshow('Final', img)
 cv2.waitKey(0)
