@@ -4,39 +4,42 @@ import numpy as np
 img = cv2.imread('D:/Python_Projects/Smart_document_scanner/images/02_rotated_15deg.jpg')
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
 blur = cv2.GaussianBlur(gray, (3,3), 0)
+canny = cv2.Canny(blur, 50, 150)
 
-canny = cv2.Canny(blur,50,150)
+contours, _ = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-contours , _ = cv2.findContours(canny,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
 for contour in contours:
-    
     epsilon = 0.02 * cv2.arcLength(contour, True)
     approx = cv2.approxPolyDP(contour, epsilon, True)
-    
-    
+
     if len(approx) == 4:
-    
-        pts = approx.reshape(4,2)
+        pts = approx.reshape(4 , 2)
         s = pts.sum(axis = 1)
-        d = np.diff(pts , axis = 1)
-    
+        d = np.diff(pts, axis = 1)
+
         width = 600
         height = 600
-    
-  
-     
-        src = np.float32([pts[np.argmin(s)] ,pts[np.argmin(d)] ,pts[np.argmax(s)] ,pts[np.argmax(d)]])
-        dst = np.float32([[0, 0],[width - 1, 0],[width - 1, height - 1],[0, height - 1]])
-        matrix = cv2.getPerspectiveTransform(src, dst)
-        result = cv2.warpPerspective(img, matrix, (width,height))
-   
-    
-    
-    
-cv2.imshow('Final', result)
-cv2.imshow('Final2',img)
+
+        src = np.float32([pts[np.argmin(s)],pts[np.argmin(d)],pts[np.argmax(s)], pts[np.argmax(d)]])
+
+        dst = np.float32([[0, 0],[width-1 ,0],[width-1 ,height-1],[0 ,height-1]])
+
+        matrix = cv2.getPerspectiveTransform(src , dst)
+        result = cv2.warpPerspective(img, matrix, (width , height))
+        cv2.imshow('Final', result)
+        
+        gray_result = cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)
+        result = cv2.adaptiveThreshold(gray_result, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,10)
+        cv2.imshow('Threshold', result)
+        
+        
+        
+        
+
+        
+
+#cv2.imshow('Final2', img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
