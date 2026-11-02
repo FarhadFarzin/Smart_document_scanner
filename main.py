@@ -9,6 +9,7 @@ images = sorted(os.listdir(folder))
 for image_name in images:
 
     img = cv2.imread(os.path.join(folder , image_name))
+          
     denoised = cv2.medianBlur(img, 9)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     canny = cv2.Canny(denoised, 50, 150)
@@ -38,8 +39,10 @@ for image_name in images:
                 
                 result = cv2.rotate(result, cv2.ROTATE_90_COUNTERCLOCKWISE)
     
+    
             
     cv2.imshow('Befor', img)
     cv2.imshow('After', result)
+    cv2.imwrite('output/' + image_name , result)
     cv2.waitKey(0)
 cv2.destroyAllWindows()
