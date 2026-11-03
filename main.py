@@ -2,16 +2,17 @@ import cv2
 import os
 import numpy as np
 
-folder = 'D:/Python_Projects/Smart_document_scanner/images'
+base_dir = os.path.dirname(os.path.abspath(__file__))
+folder = os.path.join(base_dir, 'images')
+output_folder = os.path.join(base_dir, 'output')
+os.makedirs(output_folder, exist_ok=True)
 
 images = sorted(os.listdir(folder))
 
 for image_name in images:
 
     img = cv2.imread(os.path.join(folder , image_name))
-          
     denoised = cv2.medianBlur(img, 9)
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     canny = cv2.Canny(denoised, 50, 150)
     contours, _ = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -43,6 +44,6 @@ for image_name in images:
             
     cv2.imshow('Befor', img)
     cv2.imshow('After', result)
-    cv2.imwrite('output/' + image_name , result)
+    cv2.imwrite(os.path.join(output_folder, image_name), result)
     cv2.waitKey(0)
 cv2.destroyAllWindows()
