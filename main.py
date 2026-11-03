@@ -13,7 +13,8 @@ for image_name in images:
 
     img = cv2.imread(os.path.join(folder , image_name))
     denoised = cv2.medianBlur(img, 9)
-    canny = cv2.Canny(denoised, 50, 150)
+    gray = cv2.cvtColor(denoised, cv2.COLOR_BGR2GRAY)
+    canny = cv2.Canny(gray, 50, 150)
     contours, _ = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 
